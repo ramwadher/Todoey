@@ -10,7 +10,7 @@ import UIKit
 
 class ToDoListViewController: UITableViewController {
     
-    let itemArray = ["Find Mike", "Buy Eggos", "Destroy Demogorgon"]
+    var itemArray = [""]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,6 +50,34 @@ class ToDoListViewController: UITableViewController {
         //below removes the grey highlight after selecting the row.
         tableView.deselectRow(at: indexPath, animated: true)
     }
+    
+    //MARK - Add New Items
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        var textField = UITextField()
+       
+        
+        //var textField is within scope for the enitre function. This can then be used within closures to extract data
+        
+        let alert = UIAlertController(title: "Add new Todey Item", message: "", preferredStyle: .alert)
+        
+        let action = UIAlertAction(title: "Add item", style: .default) { (action) in
+            //what will happen once user clicks the add item button on our ui alert
+            
+            self.itemArray.append(textField.text!)
+            
+            self.tableView.reloadData() //takes into account the new item
+            
+        }
+        
+        alert.addTextField { (alertTextField) in
+            alertTextField.placeholder = "Create new item"
+            //a placeholder is the grey writing that dissapears
+            textField = alertTextField
+        }
+            alert.addAction(action)
+            
+            present(alert, animated: true, completion: nil)
+        }
+    
 
 }
-
