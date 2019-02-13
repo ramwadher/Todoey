@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC358A9F2213759700D91DEF /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC358A9E2213759700D91DEF /* Item.swift */; };
 		DCDA1166220F4B870038DEB1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDA1165220F4B870038DEB1 /* AppDelegate.swift */; };
 		DCDA1168220F4B870038DEB1 /* ToDoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDA1167220F4B870038DEB1 /* ToDoListViewController.swift */; };
 		DCDA116B220F4B870038DEB1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCDA1169220F4B870038DEB1 /* Main.storyboard */; };
@@ -15,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DC358A9E2213759700D91DEF /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		DCDA1162220F4B870038DEB1 /* Todoey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Todoey.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCDA1165220F4B870038DEB1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DCDA1167220F4B870038DEB1 /* ToDoListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListViewController.swift; sourceTree = "<group>"; };
@@ -35,6 +37,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DC358AA02213759D00D91DEF /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				DC358A9E2213759700D91DEF /* Item.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		DCDA1159220F4B870038DEB1 = {
 			isa = PBXGroup;
 			children = (
@@ -55,8 +65,9 @@
 			isa = PBXGroup;
 			children = (
 				DCDA1165220F4B870038DEB1 /* AppDelegate.swift */,
-				DCDA1167220F4B870038DEB1 /* ToDoListViewController.swift */,
 				DCDA1169220F4B870038DEB1 /* Main.storyboard */,
+				DCDA1167220F4B870038DEB1 /* ToDoListViewController.swift */,
+				DC358AA02213759D00D91DEF /* Model */,
 				DCDA116C220F4B870038DEB1 /* Assets.xcassets */,
 				DCDA116E220F4B870038DEB1 /* LaunchScreen.storyboard */,
 				DCDA1171220F4B870038DEB1 /* Info.plist */,
@@ -136,6 +147,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DCDA1168220F4B870038DEB1 /* ToDoListViewController.swift in Sources */,
+				DC358A9F2213759700D91DEF /* Item.swift in Sources */,
 				DCDA1166220F4B870038DEB1 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

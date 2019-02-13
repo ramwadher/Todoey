@@ -10,15 +10,30 @@ import UIKit
 
 class ToDoListViewController: UITableViewController {
     
-    var itemArray = ["Hello"]
+    var itemArray = [Item]()
     let defaults = UserDefaults.standard
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let items = defaults.array(forKey: "ToDoListArray") as? [String] {
-            itemArray = items
-        }
+        let newItem = Item()
+        newItem.title = "Find Ram"
+        itemArray.append(newItem)
+        
+        let newItem2 = Item()
+        newItem2.title = "Find Car"
+        itemArray.append(newItem2)
+        
+        let newItem3 = Item()
+        newItem3.title = "Find Food"
+        itemArray.append(newItem3)
+        
+
+        
+        
+//        if let items = defaults.array(forKey: "ToDoListArray") as? [String] {
+//            itemArray = items
+//        }
     }
 
     
@@ -32,8 +47,23 @@ class ToDoListViewController: UITableViewController {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
         
-        cell.textLabel?.text = itemArray[indexPath.row]
+        let item = itemArray[indexPath.row]
+        
+        cell.textLabel?.text = item.title
         //above references to textlabel that is in every cell.
+        
+        //Ternery Operator ==>
+        //value = condiition ? valueIfTrue : valueIfFalse
+        //for the below the line says.  set the cell.accessoryType to checkmark (if item.done is true) or none (if false)
+        
+        cell.accessoryType = item.done ? .checkmark : .none
+        
+//        if item.done == true {
+//            cell.accessoryType = .checkmark
+//        } else {
+//            cell.accessoryType = .none
+//        }
+        
         
         return cell
     }
@@ -44,11 +74,10 @@ class ToDoListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //print(itemArray[indexPath.row])
         
-        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-            } else {
-                tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-                }
+        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
+        //above sets the dcell to the opposite of what its at once called upon. ! at the beggining reverses.
+        
+        tableView.reloadData()
 
         //below removes the grey highlight after selecting the row.
         tableView.deselectRow(at: indexPath, animated: true)
@@ -66,7 +95,10 @@ class ToDoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add item", style: .default) { (action) in
             //what will happen once user clicks the add item button on our ui alert
             
-            self.itemArray.append(textField.text!)
+            let newItem = Item()
+            newItem.title = textField.text!
+            
+            self.itemArray.append(newItem)
             
             self.defaults.set(self.itemArray, forKey: "ToDoListArray")
             
