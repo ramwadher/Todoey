@@ -11,29 +11,14 @@ import UIKit
 class ToDoListViewController: UITableViewController {
     
     var itemArray = [Item]()
-    let defaults = UserDefaults.standard
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Item.plist")
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let newItem = Item()
-        newItem.title = "Find Ram"
-        itemArray.append(newItem)
+        print(dataFilePath)
         
-        let newItem2 = Item()
-        newItem2.title = "Find Car"
-        itemArray.append(newItem2)
-        
-        let newItem3 = Item()
-        newItem3.title = "Find Food"
-        itemArray.append(newItem3)
-        
-
-        
-        
-//        if let items = defaults.array(forKey: "ToDoListArray") as? [String] {
-//            itemArray = items
-//        }
+        loadItems()
     }
 
     
@@ -77,8 +62,8 @@ class ToDoListViewController: UITableViewController {
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         //above sets the dcell to the opposite of what its at once called upon. ! at the beggining reverses.
         
-        tableView.reloadData()
-
+        saveItems()
+    
         //below removes the grey highlight after selecting the row.
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -100,9 +85,7 @@ class ToDoListViewController: UITableViewController {
             
             self.itemArray.append(newItem)
             
-            self.defaults.set(self.itemArray, forKey: "ToDoListArray")
-            
-            self.tableView.reloadData() //takes into account the new item
+            self.saveItems()
             
         }
         
@@ -115,6 +98,35 @@ class ToDoListViewController: UITableViewController {
             
             present(alert, animated: true, completion: nil)
         }
+    
+    
+    //MARK - Model manipulation methods
+    
+    func saveItems () {
+        let encoder = PropertyListEncoder()
+        
+        do {
+            let data = try encoder.encode(itemArray)
+            try data.write(to: dataFilePath!)
+        } catch {
+            print("Error in counting array \(error)")
+            
+        }
+        
+        self.tableView.reloadData() //takes into account the new item
+    }
+    
+    func loadItems() {
+        if let data = try? Data(contentsOf: dataFilePath!) {
+            let decoder = PropertyListDecoder()
+            do {
+            itemArray = try decoder.decode([Item].self, from: data)
+            } catch {
+            print("Failed to decode array. \(error)")
+            }
+        }
+    }
+    
     
 
 }

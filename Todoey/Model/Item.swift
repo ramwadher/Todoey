@@ -8,8 +8,9 @@
 
 import Foundation
 
-class Item {
+class Item: Codable {
     
+    //in order to use encodable then all propertied must be standard and not custom .... i.e. enums
     var title: String = ""
     var done: Bool = false
 }
