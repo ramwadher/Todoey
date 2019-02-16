@@ -7,16 +7,18 @@
 //
 
 import UIKit
+import CoreData
 
 class ToDoListViewController: UITableViewController {
     
     var itemArray = [Item]()
-    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Item.plist")
+
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print(dataFilePath)
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
         loadItems()
     }
@@ -59,7 +61,10 @@ class ToDoListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //print(itemArray[indexPath.row])
         
-        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
+        context.delete(itemArray[indexPath.row])
+        itemArray.remove(at: indexPath.row)
+        
+//        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         //above sets the dcell to the opposite of what its at once called upon. ! at the beggining reverses.
         
         saveItems()
@@ -71,7 +76,6 @@ class ToDoListViewController: UITableViewController {
     //MARK - Add New Items
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         var textField = UITextField()
-       
         
         //var textField is within scope for the enitre function. This can then be used within closures to extract data
         
@@ -80,13 +84,14 @@ class ToDoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add item", style: .default) { (action) in
             //what will happen once user clicks the add item button on our ui alert
             
-            let newItem = Item()
-            newItem.title = textField.text!
+            //below gives AppDelegate class as an objewct in our view controller
             
+            let newItem = Item(context: self.context)
+            newItem.title = textField.text!
+            newItem.done = false
             self.itemArray.append(newItem)
             
             self.saveItems()
-            
         }
         
         alert.addTextField { (alertTextField) in
@@ -103,30 +108,34 @@ class ToDoListViewController: UITableViewController {
     //MARK - Model manipulation methods
     
     func saveItems () {
-        let encoder = PropertyListEncoder()
         
         do {
-            let data = try encoder.encode(itemArray)
-            try data.write(to: dataFilePath!)
+            try context.save()
         } catch {
-            print("Error in counting array \(error)")
-            
+            print("error saving context \(error)")
         }
         
         self.tableView.reloadData() //takes into account the new item
     }
     
-    func loadItems() {
-        if let data = try? Data(contentsOf: dataFilePath!) {
-            let decoder = PropertyListDecoder()
-            do {
-            itemArray = try decoder.decode([Item].self, from: data)
-            } catch {
-            print("Failed to decode array. \(error)")
-            }
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
+        
+        do {
+        itemArray = try context.fetch(request)
+        } catch {
+            print("Failed to retrieve data \(error)")
         }
     }
-    
-    
+}
 
+//MARK search bar methods
+extension ToDoListViewController: UISearchBarDelegate {
+    
+    func searchBarBookmarkButtonClicked(_ searchBar: UISearchBar) {
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        
+        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        loadItems(with: request)
+    }
 }
