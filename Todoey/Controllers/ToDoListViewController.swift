@@ -13,6 +13,7 @@ class ToDoListViewController: UITableViewController {
     
     var itemArray = [Item]()
 
+    //below passes the AppDelegate class as an object in our view controller
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     override func viewDidLoad() {
@@ -65,7 +66,7 @@ class ToDoListViewController: UITableViewController {
         itemArray.remove(at: indexPath.row)
         
 //        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
-        //above sets the dcell to the opposite of what its at once called upon. ! at the beggining reverses.
+        //above sets the cell to the opposite of what its at once called upon. ! at the beggining reverses.
         
         saveItems()
     
@@ -83,8 +84,6 @@ class ToDoListViewController: UITableViewController {
         
         let action = UIAlertAction(title: "Add item", style: .default) { (action) in
             //what will happen once user clicks the add item button on our ui alert
-            
-            //below gives AppDelegate class as an objewct in our view controller
             
             let newItem = Item(context: self.context)
             newItem.title = textField.text!
@@ -137,5 +136,15 @@ extension ToDoListViewController: UISearchBarDelegate {
         request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         loadItems(with: request)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            loadItems()
+            
+            DispatchQueue.main.async {
+            searchBar.resignFirstResponder()
+            }
+        }
     }
 }
